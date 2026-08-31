@@ -1,0 +1,8 @@
+{
+  "name": "Remix Liquid Glass Studio",
+  "description": "macOS \u0026 VisionOS native Liquid Glass design system and interactive media downloader with layered optics, ambient refraction, and spring physics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
