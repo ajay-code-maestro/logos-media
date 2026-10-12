@@ -1,8 +1,9 @@
 {
-  "name": "react-example",
+  "name": "logos-media",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "main": "dist-electron/main.cjs",
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
@@ -11,8 +12,12 @@
     "electron:dev": "NODE_ENV=development electron dist-electron/main.cjs",
     "electron": "NODE_ENV=production electron dist-electron/main.cjs",
     "preview": "vite preview",
-    "clean": "rm -rf dist dist-electron server.js",
-    "lint": "tsc --noEmit"
+    "clean": "rm -rf dist dist-electron release",
+    "lint": "tsc --noEmit",
+    "package:mac": "npm run build && npm run build:electron && electron-builder --mac dmg",
+    "package:win": "npm run build && npm run build:electron && electron-builder --win nsis",
+    "package:linux": "npm run build && npm run build:electron && electron-builder --linux AppImage",
+    "package:all": "npm run build && npm run build:electron && electron-builder --mac dmg --win nsis --linux AppImage"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -34,10 +39,39 @@
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12",
     "esbuild": "^0.25.0",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.23.13",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.3"
+    "typescript": "~5.8.2"
+  },
+  "build": {
+    "appId": "com.ajay.logosmedia",
+    "productName": "Logos Media",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "bin/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    }
   }
 }

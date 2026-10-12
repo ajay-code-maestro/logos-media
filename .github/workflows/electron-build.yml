@@ -1,0 +1,53 @@
+name: Build Logos Media≈
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: mac
+          - os: windows-latest
+            target: win
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend and backend
+        run: npm run build
+
+      - name: Build Electron main and preload
+        run: npm run build:electron
+
+      - name: Package application
+        run: npx electron-builder --${{ matrix.target }}
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: logos-media-${{ matrix.target }}
+          path: release/*
+          if-no-files-found: error
+          retention-days: 14
